@@ -35,16 +35,17 @@ void setup()
   yield();
   WiFi.mode(WIFI_MODE_STA);
   yield();
-  
+  yield();
+  network_Nubers = WiFi.scanNetworks(false);
+  yield();
   initDSP();
-  sd_card_setup();
-  
-  File Ver;
+  sd_card_init();
+
   info_str = lv_label_get_text(ui_info1);
-  Ver = SD.open("/ver.txt","r");  
-  info_str.replace("%version",Ver.readString());
-  lv_label_set_text(ui_info1,info_str.c_str());
-  
+  info_str.replace("%version", openFile("/ver.txt"));
+  lv_label_set_text(ui_info1, info_str.c_str());
+  list_files();
+  load_files();
 }
 
 void loop()
@@ -88,21 +89,7 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
     data->state = LV_INDEV_STATE_REL;
   }
 }
-void sd_card_setup()
-{
-  pinMode(SD_CS, OUTPUT);
-  digitalWrite(SD_CS, HIGH);
-  SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
-  if (!SD.begin(SD_CS, SPI, 1000000))
-  {
-    Serial.println("SD Card Mount Failed");
-  }
-  uint8_t cardType = SD.cardType();
-  if (cardType == CARD_NONE)
-  {
-    Serial.println("No SD card attached");
-  }
-}
+
 void initDSP()
 {
   gfx->begin();
@@ -146,7 +133,7 @@ void initDSP()
 
     /* Initialize the display */
     lv_disp_drv_init(&disp_drv);
-    
+
     disp_drv.hor_res = screenWidth;
     disp_drv.ver_res = screenHeight;
     disp_drv.flush_cb = my_disp_flush;

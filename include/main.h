@@ -6,6 +6,8 @@
 #include "FS.h"
 #include "Esp.h"
 #include "WiFi.h"
+#include "sd_card.h"
+#include "lvgl.h"
 
 #ifndef main_h
 #define main_h

@@ -16,24 +16,31 @@ lv_obj_t *ui_Screen1;
 lv_obj_t *ui_Panel2;
 void ui_event_Button2( lv_event_t * e);
 lv_obj_t *ui_Button2;
+lv_obj_t *ui_WiFiImg;
 void ui_event_TabView2( lv_event_t * e);
 lv_obj_t *ui_TabView2;
 lv_obj_t *ui_info;
 lv_obj_t *ui_info1;
 void ui_event_Wifi( lv_event_t * e);
 lv_obj_t *ui_Wifi;
-void ui_event_TextArea1( lv_event_t * e);
-lv_obj_t *ui_TextArea1;
+void ui_event_WiFiPass( lv_event_t * e);
+lv_obj_t *ui_WiFiPass;
 lv_obj_t *ui_Roller1;
 lv_obj_t *ui_Label1;
 void ui_event_Switch1( lv_event_t * e);
 lv_obj_t *ui_Switch1;
+void ui_event_Button1( lv_event_t * e);
 lv_obj_t *ui_Button1;
 lv_obj_t *ui_Label2;
+lv_obj_t *ui_WiFiStatus;
+void ui_event_Button5( lv_event_t * e);
+lv_obj_t *ui_Button5;
 lv_obj_t *ui_brightness;
 void ui_event_britnes( lv_event_t * e);
 lv_obj_t *ui_britnes;
 lv_obj_t *ui_sd_card;
+lv_obj_t *ui_Panel5;
+lv_obj_t *ui_TabView3;
 lv_obj_t *ui_apps;
 lv_obj_t *ui_restard;
 lv_obj_t *ui_Label4;
@@ -83,17 +90,29 @@ if ( event_code == LV_EVENT_PRESSED) {
       _ui_flag_modify( ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
 }
 }
-void ui_event_TextArea1( lv_event_t * e) {
+void ui_event_WiFiPass( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_PRESSED) {
       _ui_flag_modify( ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
-      _ui_keyboard_set_target(ui_Keyboard1,  ui_TextArea1);
+      _ui_keyboard_set_target(ui_Keyboard1,  ui_WiFiPass);
 }
 }
 void ui_event_Switch1( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_CLICKED) {
       wifiSetUp( e );
+}
+}
+void ui_event_Button1( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_PRESSED) {
+      connectToWiFi( e );
+}
+}
+void ui_event_Button5( lv_event_t * e) {
+    lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
+if ( event_code == LV_EVENT_CLICKED) {
+      WiFiReFresh( e );
 }
 }
 void ui_event_britnes( lv_event_t * e) {

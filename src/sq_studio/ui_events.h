@@ -11,6 +11,8 @@ extern "C" {
 #endif
 
 void wifiSetUp(lv_event_t * e);
+void connectToWiFi(lv_event_t * e);
+void WiFiReFresh(lv_event_t * e);
 void changeScrBrit(lv_event_t * e);
 void RebootNow(lv_event_t * e);
 
