@@ -49,7 +49,6 @@ lv_obj_set_height( ui_TabView2, 226);
 lv_obj_set_x( ui_TabView2, -100 );
 lv_obj_set_y( ui_TabView2, -75 );
 lv_obj_set_align( ui_TabView2, LV_ALIGN_CENTER );
-lv_obj_add_flag( ui_TabView2, LV_OBJ_FLAG_HIDDEN );   /// Flags
 lv_obj_clear_flag( ui_TabView2, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
 lv_obj_set_style_text_font(lv_tabview_get_tab_btns(ui_TabView2), &lv_font_montserrat_12,  LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -218,6 +217,8 @@ lv_obj_set_y( ui_Keyboard1, 139 );
 lv_obj_set_x( ui_Keyboard1, lv_pct(0) );
 lv_obj_set_align( ui_Keyboard1, LV_ALIGN_CENTER );
 lv_obj_add_flag( ui_Keyboard1, LV_OBJ_FLAG_HIDDEN );   /// Flags
+
+
 
 lv_obj_add_event_cb(ui_Button2, ui_event_Button2, LV_EVENT_ALL, NULL);
 lv_obj_add_event_cb(ui_WiFiPass, ui_event_WiFiPass, LV_EVENT_ALL, NULL);

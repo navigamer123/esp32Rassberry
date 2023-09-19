@@ -6,7 +6,7 @@
 #define button_h 50
 String data_name[100];
 String data_bool[100];
-String galiq;
+String file_data_name_str;
 lv_obj_t *file_list1[100];
 lv_obj_t *file_list_text[100];
 lv_obj_t *file_list_btn_Save;
@@ -17,7 +17,14 @@ lv_obj_t *file_list_btn_Save_lable;
 lv_obj_t *file_list_btn_delete_lable;
 lv_obj_t *file_list_btn_rename_lable;
 lv_obj_t *file_list_btn_create_lable;
+lv_obj_t *ui_Panel1;
+lv_obj_t *ui_button6;
+lv_obj_t *ui_Label3;
+lv_obj_t *ui_TextArea1;
+lv_obj_t *ui_ImgButton3;
 int currnt = 0;
+String rootPath = "/root/";
+
 void ui_event_button(lv_event_t *e);
 void load_buttons();
 void listDir(fs::FS &fs, const char *dirname, uint8_t levels);
@@ -29,6 +36,9 @@ void appendFile(fs::FS &fs, const char *path, const char *message);
 void renameFile(fs::FS &fs, const char *path1, const char *path2);
 void deleteFile(fs::FS &fs, const char *path);
 void testFileIO(fs::FS &fs, const char *path);
+void ui_event_button_fileEx(lv_event_t *e);
+void ui_event_button_rename(lv_event_t *e);
+
 void sd_card_init()
 {
     pinMode(SD_CS, OUTPUT);
@@ -81,13 +91,13 @@ String openFileW(String path)
     file.close();
 }
 
-int number;
+int number = 0;
 void list_files()
 {
 
     const char *separator = ",";
     const char *separator1 = ";";
-    String file = openFile("/root/file_list.txt");
+    String file = openFile("/file_list.txt");
 
     Serial.println(file.indexOf(separator));
     number = file.charAt(0);
@@ -110,11 +120,11 @@ void list_files()
 }
 void load_files()
 {
-    String file = openFile("/root/file_list.txt");
+    String file = openFile("/file_list.txt");
 
     Serial.print(data_name[0]);
-
-    for (int i = 0; i < 4; i++)
+    listDir(SD, "/root", 0);
+    for (int i = 0; i < number; i++)
     {
 
         lv_obj_t *file_list_btn_lable;
@@ -126,13 +136,16 @@ void load_files()
         else
         {
             file_list1[currnt] = lv_tabview_add_tab(ui_TabView3, data_name[i].c_str());
+            lv_obj_add_event_cb(ui_TabView3, ui_event_button_fileEx, LV_EVENT_ALL, NULL);
             Serial.print(data_name[i]);
             file_list_text[currnt] = lv_textarea_create(file_list1[currnt]);
+            lv_textarea_set_placeholder_text(file_list_text[currnt], data_name[i].c_str());
+
             String file_patch = "/root/";
             file_patch += data_name[i];
             Serial.print(file_patch);
             readFile(SD, file_patch);
-            lv_textarea_set_text(file_list_text[currnt], galiq.c_str());
+            lv_textarea_set_text(file_list_text[currnt], file_data_name_str.c_str());
             lv_obj_add_event_cb(file_list_text[currnt], ui_event_button, LV_EVENT_ALL, NULL);
             lv_obj_set_width(file_list_text[currnt], 270);
             lv_obj_set_height(file_list_text[currnt], 220);
@@ -142,7 +155,21 @@ void load_files()
         }
         currnt++;
     }
+    Serial.print(number);
     load_buttons();
+}
+void ui_event_button_fileEx(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if (event_code == LV_EVENT_VALUE_CHANGED)
+    {
+        _ui_flag_modify(ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+        _ui_flag_modify(file_list_btn_create, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+        _ui_flag_modify(file_list_btn_Save, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+        _ui_flag_modify(file_list_btn_rename, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+        _ui_flag_modify(file_list_btn_delete, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    }
 }
 void ui_event_button(lv_event_t *e)
 {
@@ -150,10 +177,60 @@ void ui_event_button(lv_event_t *e)
     lv_obj_t *target = lv_event_get_target(e);
     if (event_code == LV_EVENT_CLICKED)
     {
-        _ui_flag_modify(ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_TOGGLE);
+
         _ui_keyboard_set_target(ui_Keyboard1, target);
+        _ui_flag_modify(ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+
+        _ui_flag_modify(file_list_btn_create, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_flag_modify(file_list_btn_Save, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_flag_modify(file_list_btn_rename, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_flag_modify(file_list_btn_delete, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
     }
 }
+void ui_event_button_save(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    if (event_code == LV_EVENT_CLICKED)
+    {
+
+        Serial.println(lv_textarea_get_text(lv_keyboard_get_textarea(ui_Keyboard1)));
+        String file_name = lv_textarea_get_placeholder_text(lv_keyboard_get_textarea(ui_Keyboard1));
+        String result = rootPath + file_name;
+        writeFile(SD, result.c_str(), lv_textarea_get_text(lv_keyboard_get_textarea(ui_Keyboard1)));
+    }
+}
+void ui_event_button_rename(lv_event_t *e)
+{
+    lv_label_set_text(ui_Label3, "type the new name");
+    _ui_flag_modify(ui_Panel1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+}
+void ui_event_button_rename_close(lv_event_t *e)
+{
+    _ui_flag_modify(ui_Panel1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+}
+
+void ui_event_button_rename_comfirm(lv_event_t *e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t *target = lv_event_get_target(e);
+    int tabview_number = lv_tabview_get_tab_act(ui_TabView3);
+
+    String file_name = lv_textarea_get_placeholder_text(file_list_text[tabview_number]);
+    String file_dir = rootPath + file_name;
+
+    String file_name_new = lv_textarea_get_text(ui_TextArea1);
+    String file_dir_new = rootPath + file_name_new;
+    lv_tabview_rename_tab(ui_TabView3, tabview_number, file_name_new.c_str());
+
+    data_name[tabview_number] = file_name_new;
+    renameFile(SD, file_dir.c_str(), file_dir_new.c_str());
+
+    Serial.print(file_dir_new.c_str());
+    _ui_flag_modify(ui_Panel1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    lv_textarea_set_text(ui_TextArea1, "");
+}
+
 void load_buttons()
 {
     file_list_btn_Save = lv_btn_create(ui_Panel5);
@@ -168,6 +245,7 @@ void load_buttons()
     lv_label_set_text(file_list_btn_Save_lable, "save");
     lv_obj_set_x(file_list_btn_Save_lable, 0);
     lv_obj_set_y(file_list_btn_Save_lable, 0);
+    lv_obj_add_event_cb(file_list_btn_Save, ui_event_button_save, LV_EVENT_ALL, NULL);
 
     file_list_btn_delete = lv_btn_create(ui_Panel5);
     lv_obj_set_width(file_list_btn_delete, button_w);
@@ -194,6 +272,7 @@ void load_buttons()
     lv_label_set_text(file_list_btn_rename_lable, "rename");
     lv_obj_set_x(file_list_btn_rename_lable, 0);
     lv_obj_set_y(file_list_btn_rename_lable, 0);
+    lv_obj_add_event_cb(file_list_btn_rename, ui_event_button_rename, LV_EVENT_CLICKED, NULL);
 
     file_list_btn_create = lv_btn_create(ui_Panel5);
     lv_obj_set_width(file_list_btn_create, button_w);
@@ -207,6 +286,56 @@ void load_buttons()
     lv_label_set_text(file_list_btn_create_lable, "create");
     lv_obj_set_x(file_list_btn_create_lable, 0);
     lv_obj_set_y(file_list_btn_create_lable, 0);
+
+    ui_Panel1 = lv_obj_create(ui_Screen1);
+    lv_obj_set_width(ui_Panel1, 189);
+    lv_obj_set_height(ui_Panel1, 170);
+    lv_obj_set_x(ui_Panel1, 299);
+    lv_obj_set_y(ui_Panel1, -103);
+    lv_obj_set_align(ui_Panel1, LV_ALIGN_CENTER);
+    lv_obj_clear_flag(ui_Panel1, LV_OBJ_FLAG_SCROLLABLE); /// Flags
+
+    ui_button6 = lv_imgbtn_create(ui_Panel1);
+    lv_imgbtn_set_src(ui_button6, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_cancel_png, NULL);
+    lv_obj_set_height(ui_button6, 32);
+    lv_obj_set_width(ui_button6, LV_SIZE_CONTENT); /// 1
+    lv_obj_set_x(ui_button6, 73);
+    lv_obj_set_y(ui_button6, -61);
+    lv_obj_set_align(ui_button6, LV_ALIGN_CENTER);
+    lv_obj_add_event_cb(ui_button6, ui_event_button_rename_close, LV_EVENT_CLICKED, NULL);
+
+    ui_Label3 = lv_label_create(ui_Panel1);
+    lv_obj_set_width(ui_Label3, LV_SIZE_CONTENT);  /// 1
+    lv_obj_set_height(ui_Label3, LV_SIZE_CONTENT); /// 1
+    lv_obj_set_x(ui_Label3, -21);
+    lv_obj_set_y(ui_Label3, -62);
+    lv_obj_set_align(ui_Label3, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label3, "type the new name");
+
+    ui_TextArea1 = lv_textarea_create(ui_Panel1);
+    lv_obj_set_width(ui_TextArea1, 150);
+    lv_obj_set_height(ui_TextArea1, 79);
+    lv_obj_set_x(ui_TextArea1, -6);
+    lv_obj_set_y(ui_TextArea1, -5);
+    lv_obj_set_align(ui_TextArea1, LV_ALIGN_CENTER);
+    lv_textarea_set_placeholder_text(ui_TextArea1, "name");
+    lv_textarea_set_max_length(ui_Panel1, 32);
+    lv_obj_add_event_cb(ui_TextArea1, ui_event_button, LV_EVENT_CLICKED, NULL);
+
+    ui_ImgButton3 = lv_imgbtn_create(ui_Panel1);
+    lv_imgbtn_set_src(ui_ImgButton3, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_rsz_correct_png, NULL);
+    lv_obj_set_height(ui_ImgButton3, 35);
+    lv_obj_set_width(ui_ImgButton3, LV_SIZE_CONTENT); /// 1
+    lv_obj_set_x(ui_ImgButton3, -3);
+    lv_obj_set_y(ui_ImgButton3, 61);
+    lv_obj_set_align(ui_ImgButton3, LV_ALIGN_CENTER);
+    lv_obj_add_event_cb(ui_ImgButton3, ui_event_button_rename_comfirm, LV_EVENT_CLICKED, NULL);
+
+    _ui_flag_modify(file_list_btn_create, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    _ui_flag_modify(file_list_btn_Save, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    _ui_flag_modify(file_list_btn_rename, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    _ui_flag_modify(file_list_btn_delete, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    _ui_flag_modify(ui_Panel1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
 }
 
 void listDir(fs::FS &fs, const char *dirname, uint8_t levels)
@@ -231,20 +360,27 @@ void listDir(fs::FS &fs, const char *dirname, uint8_t levels)
         {
             Serial.print(" DIR : ");
             Serial.println(file.name());
+            data_name[i] = file.name();
+            data_bool[i] = true;
             if (levels)
             {
                 listDir(fs, file.name(), levels - 1);
             }
+            i++;
         }
         else
         {
             Serial.print(" FILE: ");
+            data_name[i] = file.name();
+            data_bool[i] = false;
             Serial.print(file.name());
             Serial.print(" SIZE: ");
             Serial.println(file.size());
+            i++;
         }
         file = root.openNextFile();
     }
+    number = i;
 }
 void createDir(fs::FS &fs, const char *path)
 {
@@ -282,7 +418,7 @@ void readFile(fs::FS &fs, const String path)
     Serial.print("Read from file: ");
     while (file.available())
     {
-        galiq = file.readString();
+        file_data_name_str = file.readString();
         Serial.write(file.read());
     }
 }
