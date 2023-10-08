@@ -8,7 +8,7 @@
 #include "WiFi.h"
 #include "sd_card.h"
 #include "lvgl.h"
-
+#include "sq_studio/ui.h"
 #ifndef main_h
 #define main_h
 #define backround_collor WHITE

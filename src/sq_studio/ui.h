@@ -67,19 +67,13 @@ void ui_event_Button4( lv_event_t * e);
 extern lv_obj_t *ui_Button4;
 extern lv_obj_t *ui_Label6;
 extern lv_obj_t *ui_Keyboard1;
-extern lv_obj_t *ui_Panel1;
-extern lv_obj_t *ui_button6;
-extern lv_obj_t *ui_Label3;
-extern lv_obj_t *ui_TextArea1;
-extern lv_obj_t *ui_ImgButton3;
 extern lv_obj_t *ui____initial_actions0;
 
 LV_IMG_DECLARE( ui_img_1867224769);   // assets\ubuntu-20-04-without-dots-wallpaper-800x480_12-transformed.png
 LV_IMG_DECLARE( ui_img_logo_png);   // assets\logo.png
 LV_IMG_DECLARE( ui_img_275597544);   // assets\wifi (2).png
 LV_IMG_DECLARE( ui_img_170455819);   // assets\refresh (1).png
-LV_IMG_DECLARE( ui_img_cancel_png);   // assets\cancel.png
-LV_IMG_DECLARE( ui_img_rsz_correct_png);   // assets\rsz_correct.png
+
 
 
 

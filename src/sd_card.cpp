@@ -1,6 +1,8 @@
 #include "main.h"
 #include <vector>
 #include "sq_studio/ui.h"
+LV_IMG_DECLARE( ui_img_cancel_png);   // assets\refresh (1).png
+LV_IMG_DECLARE( ui_img_rsz_correct_png);   // assets\refresh (1).png
 #define button_x 200
 #define button_w 110
 #define button_h 50
@@ -155,7 +157,7 @@ void load_files()
         }
         currnt++;
     }
-    Serial.print(number);
+    lv_obj_add_event_cb(ui_TabView3, ui_event_button_rename, LV_EVENT_LONG_PRESSED_REPEAT, NULL);
     load_buttons();
 }
 void ui_event_button_fileEx(lv_event_t *e)
@@ -165,7 +167,6 @@ void ui_event_button_fileEx(lv_event_t *e)
     if (event_code == LV_EVENT_VALUE_CHANGED)
     {
         _ui_flag_modify(ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
-        _ui_flag_modify(file_list_btn_create, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
         _ui_flag_modify(file_list_btn_Save, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
         _ui_flag_modify(file_list_btn_rename, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
         _ui_flag_modify(file_list_btn_delete, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
@@ -237,7 +238,7 @@ void load_buttons()
     lv_obj_set_width(file_list_btn_Save, button_w);
     lv_obj_set_height(file_list_btn_Save, button_h);
     lv_obj_set_x(file_list_btn_Save, button_x);
-    lv_obj_set_y(file_list_btn_Save, -83);
+    lv_obj_set_y(file_list_btn_Save, 85);
     lv_obj_set_align(file_list_btn_Save, LV_ALIGN_CENTER);
     lv_obj_add_flag(file_list_btn_Save, LV_OBJ_FLAG_SCROLL_ON_FOCUS); /// Flags
     lv_obj_clear_flag(file_list_btn_Save, LV_OBJ_FLAG_SCROLLABLE);    /// Flags
@@ -278,7 +279,7 @@ void load_buttons()
     lv_obj_set_width(file_list_btn_create, button_w);
     lv_obj_set_height(file_list_btn_create, button_h);
     lv_obj_set_x(file_list_btn_create, button_x);
-    lv_obj_set_y(file_list_btn_create, 85);
+    lv_obj_set_y(file_list_btn_create, -83);
     lv_obj_set_align(file_list_btn_create, LV_ALIGN_CENTER);
     lv_obj_add_flag(file_list_btn_create, LV_OBJ_FLAG_SCROLL_ON_FOCUS); /// Flags
     lv_obj_clear_flag(file_list_btn_create, LV_OBJ_FLAG_SCROLLABLE);    /// Flags
@@ -331,7 +332,6 @@ void load_buttons()
     lv_obj_set_align(ui_ImgButton3, LV_ALIGN_CENTER);
     lv_obj_add_event_cb(ui_ImgButton3, ui_event_button_rename_comfirm, LV_EVENT_CLICKED, NULL);
 
-    _ui_flag_modify(file_list_btn_create, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
     _ui_flag_modify(file_list_btn_Save, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
     _ui_flag_modify(file_list_btn_rename, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
     _ui_flag_modify(file_list_btn_delete, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
@@ -416,11 +416,11 @@ void readFile(fs::FS &fs, const String path)
         return;
     }
     Serial.print("Read from file: ");
-    while (file.available())
-    {
-        file_data_name_str = file.readString();
-        Serial.write(file.read());
-    }
+    //while (file.available())
+    //{
+    //}
+    file_data_name_str = file.readString();
+    Serial.println("done");
 }
 void writeFile(fs::FS &fs, const char *path, const char *message)
 {
