@@ -7,11 +7,14 @@ class window
 {
 public:
     String tytle;
-    
-    lv_obj_t *img_obj = lv_img_create(lv_scr_act());
+
+    lv_obj_t *img_obj = lv_img_create(ui_Screen1);
     lv_obj_t *window_box = lv_obj_create(ui_Screen1);
     int x = 0;
     int y = 50;
+    int width = 800;
+    int height = 480;
+    File icon1;
     class window_content
     {
     public:

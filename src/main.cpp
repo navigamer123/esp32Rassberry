@@ -46,13 +46,13 @@ void setup()
   lv_label_set_text(ui_info1, info_str.c_str());
   list_files();
   load_files();
+  window window_test;
 }
 
 void loop()
 {
   // put your main code here, to run repeatedly:
   lv_timer_handler();
-  
 }
 
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
