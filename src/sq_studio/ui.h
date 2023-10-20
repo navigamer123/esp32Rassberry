@@ -76,7 +76,6 @@ LV_IMG_DECLARE( ui_img_170455819);   // assets\refresh (1).png
 
 
 
-
 void ui_init(void);
 
 #ifdef __cplusplus

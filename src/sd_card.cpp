@@ -74,7 +74,7 @@ void sd_card_init()
     }
     uint64_t cardSize = SD.cardSize() / (1024 * 1024);
     Serial.printf("SD Card Size: %lluMB\n", cardSize);
-    listDir(SD, "/root", 0);
+    //listDir(SD, "/root", 0);
 }
 String openFile(String path)
 {
