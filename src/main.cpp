@@ -29,6 +29,7 @@ static lv_color_t *disp_draw_buf;
 static lv_disp_drv_t disp_drv;
 int network_Nubers;
 String info_str;
+window window_test;
 void setup()
 {
   Serial.begin(115200);
@@ -46,13 +47,16 @@ void setup()
   lv_label_set_text(ui_info1, info_str.c_str());
   list_files();
   load_files();
-  window window_test;
+  yield();
+  window_test.setup();
+  yield();
 }
 
 void loop()
 {
   // put your main code here, to run repeatedly:
   lv_timer_handler();
+  window_test.loop();
 }
 
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)

@@ -14,7 +14,8 @@ public:
     String tytle;
     ////////////////////////////////WINDOWBOX////////////////////////////////
     lv_obj_t *window_box = lv_obj_create(ui_Screen1);
-
+    void loop();
+    void setup();
     int x = 0;
     int y = 25;
     int width = lv_pct(100);
@@ -33,9 +34,9 @@ public:
     void setup_btn_and_text(lv_obj_t *obj, lv_obj_t *obj_l, int x, int y, int w, int h, const char *text);
     static void event_minimize( lv_event_t * e);
     static void event_resize( lv_event_t * e);
-    void* event_close( lv_event_t * e);
+    static void event_close( lv_event_t * e);
     void* event_close_MY(void);
-    
+    bool button_read(int button);
     String title = "test";
     
     
