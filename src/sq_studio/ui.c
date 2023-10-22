@@ -42,6 +42,7 @@ lv_obj_t *ui_sd_card;
 lv_obj_t *ui_Panel5;
 lv_obj_t *ui_TabView3;
 lv_obj_t *ui_apps;
+lv_obj_t *ui_appsPanel;
 lv_obj_t *ui_restard;
 lv_obj_t *ui_Label4;
 void ui_event_Button3( lv_event_t * e);

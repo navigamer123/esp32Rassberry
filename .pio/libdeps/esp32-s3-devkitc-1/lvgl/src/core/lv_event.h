@@ -23,7 +23,6 @@ extern "C" {
  *      TYPEDEFS
  **********************/
 
-
 struct _lv_obj_t;
 struct _lv_event_dsc_t;
 

@@ -11,10 +11,21 @@
 class window
 {
 public:
+    #define app_width 50
+    #define app_height 50
+    
     String tytle;
+    ////////////////////////////////MainButton///////////////////////////////
+    lv_obj_t *aplication_button = lv_btn_create(ui_appsPanel);
+    lv_obj_t *aplication_button_text = lv_label_create(aplication_button);
+    int app_number;
+    void app_button_setUp();
+    
     ////////////////////////////////WINDOWBOX////////////////////////////////
     lv_obj_t *window_box = lv_obj_create(ui_Screen1);
-
+    window(String name,int app_number_);
+    void loop();
+    void setup();
     int x = 0;
     int y = 25;
     int width = lv_pct(100);
@@ -33,9 +44,9 @@ public:
     void setup_btn_and_text(lv_obj_t *obj, lv_obj_t *obj_l, int x, int y, int w, int h, const char *text);
     static void event_minimize( lv_event_t * e);
     static void event_resize( lv_event_t * e);
-    void* event_close( lv_event_t * e);
+    static void event_close( lv_event_t * e);
     void* event_close_MY(void);
-    
+    bool button_read(int button);
     String title = "test";
     
     

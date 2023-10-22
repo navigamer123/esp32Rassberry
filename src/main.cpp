@@ -21,6 +21,7 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
 void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data);
 
 void initDSP();
+void setupApps();
 void sd_card_setup();
 static uint32_t screenWidth = gfx->width();
 static uint32_t screenHeight = gfx->height();
@@ -29,6 +30,11 @@ static lv_color_t *disp_draw_buf;
 static lv_disp_drv_t disp_drv;
 int network_Nubers;
 String info_str;
+window *window_test;
+window *window_test1;
+
+window *Apps[10];
+int appNumber = 0;
 void setup()
 {
   Serial.begin(115200);
@@ -46,13 +52,21 @@ void setup()
   lv_label_set_text(ui_info1, info_str.c_str());
   list_files();
   load_files();
-  window window_test;
+  yield();
+  setupApps();
+  window_test = new window("test", 0);
+  window_test1 = new window("test1", 1);
+  window_test->setup();
+  window_test1->setup();
+  yield();
 }
 
 void loop()
 {
   // put your main code here, to run repeatedly:
   lv_timer_handler();
+  window_test->loop();
+  window_test1->loop();
 }
 
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
@@ -149,5 +163,22 @@ void initDSP()
     lv_indev_drv_register(&indev_drv);
     ui_init();
     Serial.println("Setup done");
+  }
+}
+void setupApps()
+{
+  File root = SD.open("/apps");
+  File file = root.openNextFile();
+  int i= 0;
+  while (file)
+  {
+
+    Serial.print(" FILE: ");
+    Serial.print(file.name());
+    file = root.openNextFile();
+    String appname;
+    appname = file.readString();
+    Apps[i] = new window(file.name(), i);
+    i++;
   }
 }

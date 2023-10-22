@@ -49,7 +49,6 @@ lv_obj_set_height( ui_TabView2, 226);
 lv_obj_set_x( ui_TabView2, -100 );
 lv_obj_set_y( ui_TabView2, -75 );
 lv_obj_set_align( ui_TabView2, LV_ALIGN_CENTER );
-lv_obj_add_flag( ui_TabView2, LV_OBJ_FLAG_HIDDEN );   /// Flags
 lv_obj_clear_flag( ui_TabView2, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
 lv_obj_set_style_text_font(lv_tabview_get_tab_btns(ui_TabView2), &lv_font_montserrat_12,  LV_PART_MAIN| LV_STATE_DEFAULT);
@@ -164,6 +163,14 @@ lv_obj_clear_flag( ui_TabView3, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
 
 ui_apps = lv_tabview_add_tab(ui_TabView2, "app list");
+lv_obj_clear_flag( ui_apps, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+
+ui_appsPanel = lv_obj_create(ui_apps);
+lv_obj_set_width( ui_appsPanel, lv_pct(108));
+lv_obj_set_height( ui_appsPanel, lv_pct(125));
+lv_obj_set_align( ui_appsPanel, LV_ALIGN_CENTER );
+lv_obj_clear_flag( ui_appsPanel, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+lv_obj_set_style_radius(ui_appsPanel, 0, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_restard = lv_tabview_add_tab(ui_TabView2, "reboot");
 

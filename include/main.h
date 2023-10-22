@@ -10,6 +10,8 @@
 #include "lvgl.h"
 #include "sq_studio/ui.h"
 #include "windows/window.h"
+#include "math.h"
+#include "vector.h"
 
 #ifndef main_h
 #define main_h
