@@ -111,26 +111,6 @@ void window::setup()
     app_button_setUp();
 }
 
-void window::loop()
-{
-    if (button_read(1))
-    {
-        /* code */
-    }
-    else if (button_read(2))
-    {
-        /* code */
-    }
-    else if (button_read(3))
-    {
-        _ui_flag_modify(window_box, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
-    }
-    else if (button_read(4))
-    {
-        _ui_flag_modify(window_box, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
-    }
-}
-
 bool window::button_read(int button)
 {
     switch (button)
@@ -153,10 +133,6 @@ bool window::button_read(int button)
     }
     return false;
 }
-void window::setup()
-{
-    window();
-}
 
 void window::loop()
 {
@@ -174,24 +150,7 @@ void window::loop()
     }
 }
 
-bool window::button_read(int button)
-{
-    switch (button)
-    {
-    case 1:
-        return lv_obj_get_state(minimizeButton);
-        break;
-    case 2:
-        return lv_obj_get_state(resizeButton);
 
-        break;
-    case 3:
-        return lv_obj_get_state(closeButton);
-        break;
-    default:
-        break;
-    }
-}
 void window::event_minimize(lv_event_t *e)
 {
     Serial.print("event_minimize");

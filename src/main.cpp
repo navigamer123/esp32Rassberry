@@ -176,8 +176,6 @@ void setupApps()
     Serial.print(" FILE: ");
     Serial.print(file.name());
     file = root.openNextFile();
-    String appname;
-    appname = file.readString();
     Apps[i] = new window(file.name(), i);
     i++;
   }
