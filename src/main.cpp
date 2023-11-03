@@ -22,6 +22,7 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data);
 
 void initDSP();
 void setupApps();
+void loopFiles();
 void sd_card_setup();
 static uint32_t screenWidth = gfx->width();
 static uint32_t screenHeight = gfx->height();
@@ -29,6 +30,7 @@ static lv_disp_draw_buf_t draw_buf;
 static lv_color_t *disp_draw_buf;
 static lv_disp_drv_t disp_drv;
 int network_Nubers;
+int allApps = 0;
 String info_str;
 window *window_test;
 window *window_test1;
@@ -54,10 +56,10 @@ void setup()
   load_files();
   yield();
   setupApps();
-  window_test = new window("test", 0);
-  window_test1 = new window("test1", 1);
-  window_test->setup();
-  window_test1->setup();
+  // window_test = new window("test", 0);
+  // window_test1 = new window("test1", 1);
+  //  window_test->setup();
+  //  window_test1->setup();
   yield();
 }
 
@@ -65,8 +67,9 @@ void loop()
 {
   // put your main code here, to run repeatedly:
   lv_timer_handler();
-  window_test->loop();
-  window_test1->loop();
+  loopFiles();
+  //  window_test->loop();
+  //  window_test1->loop();
 }
 
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
@@ -169,14 +172,40 @@ void setupApps()
 {
   File root = SD.open("/apps");
   File file = root.openNextFile();
-  int i= 0;
+  int i = 0;
+  String appdata;
+  String appName;
   while (file)
   {
 
     Serial.print(" FILE: ");
     Serial.print(file.name());
-    file = root.openNextFile();
-    Apps[i] = new window(file.name(), i);
-    i++;
+    appName = file.name();
+    if (appName.endsWith(".app"))
+    {
+      appName = "";
+      appdata = file.readString();
+      for (int i = 8; appdata.charAt(i) != ';'; i++)
+      {
+        appName += appdata.charAt(i);
+      }
+      Apps[i] = new window(appName, i);
+      Apps[i]->setup();
+      file = root.openNextFile();
+      i++;
+    }
+    else
+    {
+      file = root.openNextFile();
+    }
+  }
+
+  allApps = i;
+}
+void loopFiles()
+{
+  for (int i = 0; i < allApps; i++)
+  {
+    Apps[i]->loop();
   }
 }

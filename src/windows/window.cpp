@@ -19,8 +19,8 @@ void window::app_button_setUp()
 {
     if (app_number == 0)
     {
-        lv_obj_set_x(aplication_button, ((app_width * -1) + app_width / 2) + app_width * app_number);
-        lv_obj_set_y(aplication_button, ((app_height * -1) + app_height / 2));
+        lv_obj_set_x(aplication_button, ((app_width * -1) + app_width / 2) + app_width * app_number + 5*(app_number + 2));
+        lv_obj_set_y(aplication_button, ((app_height * -1) + app_height / 2) + 10);
     }
     else
     {
@@ -31,8 +31,8 @@ void window::app_button_setUp()
         }
         else
         {
-            lv_obj_set_x(aplication_button, ((app_width * -1) + app_width / 2) + app_width * (app_number - (app_number / u16_t(500 / app_width)) * 10) + 5);
-            lv_obj_set_y(aplication_button, ((app_height * -1) + app_height / 2));
+            lv_obj_set_x(aplication_button, ((app_width * -1) + app_width / 2) + app_width * (app_number - (app_number / u16_t(500 / app_width)) * 10) + 5*(app_number + 2));
+            lv_obj_set_y(aplication_button, ((app_height * -1) + app_height / 2) + 10);
         }
     }
     lv_obj_set_width(aplication_button, app_width);
@@ -142,11 +142,15 @@ void window::loop()
     }
     else if (button_read(2))
     {
-        /* code */
+        
     }
     else if (button_read(3))
     {
         _ui_flag_modify(window_box, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+    }
+    else if (button_read(4)){
+        _ui_flag_modify(window_box, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+    
     }
 }
 

@@ -28,7 +28,7 @@ public:
     void setup();
     int x = 0;
     int y = 25;
-    int width = lv_pct(100);
+    int width = 800;
     int height = 430;
     bool decoded;
     File icon1;
